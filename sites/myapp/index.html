@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>233 AI - Intelligence Without Limits</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Marked.js for Markdown Rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Highlight.js for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark-reasonable.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            surface: {
+              950: '#07090e',
+              900: '#0c1017',
+              850: '#111722',
+              800: '#171f2e',
+              700: '#222d42',
+              600: '#334155'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+          },
+          animation: {
+            'pulse-fast': 'pulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'fade-in': 'fadeIn 0.25s ease-out forwards',
+            'slide-up': 'slideUp 0.3s ease-out forwards',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(12px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Markdown Styling in Responses */
+    .prose-chat pre {
+      margin: 0.75rem 0;
+      border-radius: 0.5rem;
+      background: #090d14 !important;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+    .prose-chat code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .prose-chat p {
+      margin-bottom: 0.75rem;
+      line-height: 1.65;
+    }
+    .prose-chat p:last-child {
+      margin-bottom: 0;
+    }
+    .prose-chat ul, .prose-chat ol {
+      margin: 0.5rem 0 0.75rem 1.25rem;
+    }
+    .prose-chat li {
+      margin-bottom: 0.25rem;
+    }
+    .prose-chat blockquote {
+      border-left: 3px solid #6366f1;
+      padding-left: 0.85rem;
+      color: #94a3b8;
+      font-style: italic;
+      margin: 0.75rem 0;
+    }
+    .prose-chat table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0;
+      font-size: 0.875rem;
+    }
+    .prose-chat th, .prose-chat td {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      text-align: left;
+    }
+    .prose-chat th {
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 600;
+    }
+
+    /* Smooth glow accents */
+    .glow-brand {
+      box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35);
+    }
+    .glow-pill {
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Caret typing indicator */
+    .typing-cursor::after {
+      content: '▋';
+      display: inline-block;
+      vertical-align: baseline;
+      animation: blink 0.8s infinite;
+      color: #818cf8;
+      margin-left: 2px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Mobile safe areas */
+    .safe-bottom {
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    .safe-top {
+      padding-top: max(0.5rem, env(safe-area-inset-top));
+    }
+  </style>
+</head>
+<body class="bg-surface-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col font-sans select-none md:select-auto">
+
+  <!-- Mobile Overlay Backdrop -->
+  <div id="mobileBackdrop" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity duration-300 md:hidden" onclick="toggleSidebar(false)"></div>
+
+
+<div id="authScreen" class="fixed inset-0 z-[100] bg-surface-950 flex items-center justify-center p-5">
+  <div class="w-full max-w-md bg-surface-900 border border-white/10 rounded-2xl p-7 shadow-2xl">
+    <div class="text-center mb-7">
+      <div class="mx-auto mb-4 w-14 h-14 rounded-2xl bg-brand-600 flex items-center justify-center">
+        <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-white">233 AI</h1>
+      <p class="text-sm text-slate-400 mt-2">Intelligence without limits.</p>
+    </div>
+    <h2 id="authTitle" class="text-lg font-semibold mb-4">Welcome back</h2>
+    <form id="authForm" class="space-y-4">
+      <input id="authEmail" type="email" required placeholder="Email address"
+        class="w-full p-3 rounded-xl bg-surface-800 border border-white/10 text-white outline-none">
+      <input id="authPassword" type="password" required minlength="6" placeholder="Password (at least 6 characters)"
+        class="w-full p-3 rounded-xl bg-surface-800 border border-white/10 text-white outline-none">
+      <p id="authError" class="text-sm text-red-400"></p>
+      <button id="authSubmit" type="submit"
+        class="w-full p-3 rounded-xl bg-brand-600 hover:bg-brand-500 font-semibold text-white">
+        Login
+      </button>
+    </form>
+    <p class="text-center text-sm text-slate-400 mt-5">
+      <span id="authSwitchText">Don't have an account?</span>
+      <button id="authSwitch" class="text-brand-400 font-semibold ml-1">Sign up</button>
+    </p>
+  </div>
+</div>
+
+<div id="appShell" class="hidden flex h-full w-full overflow-hidden relative">
+
+    <!-- SIDEBAR: Navigation & Chat History -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-50 w-72 sm:w-80 bg-surface-900 border-r border-white/5 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 h-full">
+      <!-- App Brand & New Chat -->
+      <div class="p-4 border-b border-white/5 flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+              <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <h1 class="font-bold text-base tracking-tight flex items-center gap-1.5 text-white">
+                233 AI
+                <span class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">v2.4</span>
+              </h1>
+              <p class="text-[11px] text-slate-400">Intelligence without limits.</p>
+            </div>
+          </div>
+          <!-- Close button on Mobile -->
+          <button onclick="toggleSidebar(false)" class="p-2 text-slate-400 hover:text-white rounded-lg md:hidden hover:bg-surface-800 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button onclick="startNewChat()" class="mt-1 w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white/5 hover:bg-brand-600 hover:text-white border border-white/10 hover:border-brand-500 font-medium text-sm transition-all duration-200 group active:scale-[0.98]">
+          <i data-lucide="plus" class="w-4 h-4 text-slate-400 group-hover:text-white transition"></i>
+          <span>New Conversation</span>
+        </button>
+      </div>
+
+      <!-- Conversations List -->
+      <div class="flex-1 overflow-y-auto px-2 py-3 space-y-1" id="chatListContainer">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Owner Dashboard Navigation -->
+      <div class="px-3 pb-3">
+        <button id="ownerDashboardBtn" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-300 hover:bg-brand-500/20 transition">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          <span class="text-sm font-semibold">Owner Dashboard</span>
+        </button>
+      </div>
+
+      <!-- User & Settings Footer -->
+      <div class="p-3 border-t border-white/5 bg-surface-900/60 backdrop-blur flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xs font-bold text-white shadow-inner">
+            JD
+          </div>
+          <div class="overflow-hidden">
+            <p id="signedInEmail" class="text-xs font-semibold text-slate-200 truncate">Account</p>
+            <p class="text-[10px] text-slate-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Free Plan • Signed in
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+
+            <button id="logoutBtn" title="Logout" class="p-2 text-slate-400 hover:text-red-400 hover:bg-surface-800 rounded-lg transition">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+
+            <button onclick="openSettingsModal()" title="Settings" class="p-2 text-slate-400 hover:text-slate-200 hover:bg-surface-800 rounded-lg transition">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT CONTAINER -->
+    <main class="flex-1 flex flex-col h-full bg-surface-950 relative overflow-hidden">
+
+      <!-- Top Navigation Bar -->
+      <header class="h-16 border-b border-white/5 px-4 flex items-center justify-between bg-surface-950/80 backdrop-blur-md z-30 sticky top-0">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleSidebar(true)" class="p-2 -ml-1 text-slate-400 hover:text-white rounded-lg md:hidden hover:bg-surface-850 active:scale-95 transition" aria-label="Open Sidebar">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Model Selector Dropdown -->
+          <div class="relative">
+            <button id="modelSelectorBtn" onclick="toggleModelDropdown()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-900 border border-white/10 hover:border-white/20 text-xs sm:text-sm font-medium transition active:scale-95">
+              <span id="currentModelDot" class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <span id="currentModelName">DeepSeek R1 • Reasoning</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="modelDropdown" class="hidden absolute top-full left-0 mt-2 w-64 bg-surface-850 border border-white/10 rounded-xl shadow-2xl p-1.5 z-50 backdrop-blur-xl animate-fade-in">
+              <div onclick="selectModel('DeepSeek R1 • Reasoning', 'bg-cyan-400', 'deepseek')" class="flex items-start gap-2.5 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="text-xs font-semibold text-white">DeepSeek R1</div>
+                  <div class="text-[11px] text-slate-400">Deep thought chain & scientific reasoning</div>
+                </div>
+              </div>
+              <div onclick="selectModel('GPT-4o Omniverse', 'bg-emerald-400', 'gpt4o')" class="flex items-start gap-2.5 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="text-xs font-semibold text-white">GPT-4o Omniverse</div>
+                  <div class="text-[11px] text-slate-400">Multimodal fast creative power</div>
+                </div>
+              </div>
+              <div onclick="selectModel('Claude 3.5 Sonnet', 'bg-amber-400', 'claude')" class="flex items-start gap-2.5 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition">
+                <span class="w-2 h-2 rounded-full bg-amber-400 mt-1.5 flex-shrink-0"></span>
+                <div>
+                  <div class="text-xs font-semibold text-white">Claude 3.5 Sonnet</div>
+                  <div class="text-[11px] text-slate-400">Nuanced coding & literary writing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat action buttons -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="clearCurrentChat()" title="Clear Chat Messages" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-surface-850 rounded-lg transition">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+          <button onclick="exportChatHistory()" title="Export Transcript" class="p-2 text-slate-400 hover:text-white hover:bg-surface-850 rounded-lg transition">
+            <i data-lucide="share" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Message History Container -->
+      <div id="chatScrollArea" class="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6 scroll-smooth">
+        <!-- Welcoming Empty State Container -->
+        <div id="emptyState" class="max-w-2xl mx-auto h-full flex flex-col items-center justify-center text-center py-12 animate-fade-in">
+          <div class="w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center mb-6">
+            <img src="/images/robot.png" alt="233 AI robot mascot" class="w-full h-full object-contain drop-shadow-2xl">
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
+            What will we create today?
+          </h2>
+          <p class="text-sm text-slate-400 max-w-md mb-8 leading-relaxed">
+            Experience ultra-fast, context-aware artificial intelligence. Select an inspired starter prompt or ask any question.
+          </p>
+
+          <!-- Prompt Suggestions Cards Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl text-left">
+            <button onclick="usePrompt('Explain quantum computing like I am a high school student with analogies.')" class="p-3.5 rounded-xl bg-surface-900 border border-white/5 hover:border-brand-500/40 hover:bg-surface-850 transition duration-200 group text-left">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="atom" class="w-4 h-4 text-brand-400 group-hover:scale-110 transition"></i>
+                <span class="text-xs font-semibold text-slate-200">Quantum Computing</span>
+              </div>
+              <p class="text-xs text-slate-400 line-clamp-2">Explain superposition & qubits simply using easy daily analogies.</p>
+            </button>
+
+            <button onclick="usePrompt('Write a clean Python script using AsyncIO to fetch multiple REST API endpoints in parallel.')" class="p-3.5 rounded-xl bg-surface-900 border border-white/5 hover:border-brand-500/40 hover:bg-surface-850 transition duration-200 group text-left">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="code-2" class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition"></i>
+                <span class="text-xs font-semibold text-slate-200">Python Async API</span>
+              </div>
+              <p class="text-xs text-slate-400 line-clamp-2">Generate clean asynchronous Python code with error handling.</p>
+            </button>
+
+            <button onclick="usePrompt('Design a landing page pitch and copy for an AI-powered smart productivity ring.')" class="p-3.5 rounded-xl bg-surface-900 border border-white/5 hover:border-brand-500/40 hover:bg-surface-850 transition duration-200 group text-left">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400 group-hover:scale-110 transition"></i>
+                <span class="text-xs font-semibold text-slate-200">Product Pitch Copy</span>
+              </div>
+              <p class="text-xs text-slate-400 line-clamp-2">Compelling headlines, value propositions, and CTA slogans.</p>
+            </button>
+
+            <button onclick="usePrompt('Write an executive summary of 5 essential strategies to scale a SaaS startup in 2025.')" class="p-3.5 rounded-xl bg-surface-900 border border-white/5 hover:border-brand-500/40 hover:bg-surface-850 transition duration-200 group text-left">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="trending-up" class="w-4 h-4 text-cyan-400 group-hover:scale-110 transition"></i>
+                <span class="text-xs font-semibold text-slate-200">SaaS Growth Blueprint</span>
+              </div>
+              <p class="text-xs text-slate-400 line-clamp-2">Frameworks for retention, PLG growth, and lean distribution.</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat messages container -->
+        <div id="messagesList" class="max-w-3xl mx-auto space-y-6 pb-6 hidden">
+          <!-- Dynamically inserted messages -->
+        </div>
+      </div>
+
+      <!-- Scroll to bottom float button -->
+      <button id="scrollToBottomBtn" onclick="scrollToBottom(true)" class="hidden absolute bottom-24 right-6 p-2 rounded-full bg-surface-800/90 border border-white/10 text-slate-300 hover:text-white shadow-xl hover:bg-surface-700 transition active:scale-90 z-20">
+        <i data-lucide="arrow-down" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Bottom Input Section -->
+      <footer class="p-3 sm:p-5 bg-gradient-to-t from-surface-950 via-surface-950/95 to-transparent safe-bottom relative z-30">
+        <div class="max-w-3xl mx-auto">
+
+          <!-- Stop generation floating banner (when streaming) -->
+          <div id="stopStreamingContainer" class="hidden justify-center mb-2 animate-fade-in">
+            <button onclick="stopGeneration()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-850 border border-rose-500/40 text-rose-300 text-xs font-medium hover:bg-rose-950/40 shadow-lg transition">
+              <i data-lucide="square" class="w-3 h-3 fill-rose-400 text-rose-400"></i>
+              <span>Stop Generating</span>
+            </button>
+          </div>
+
+          <!-- Main Input Card with Glow Border -->
+          <div class="relative bg-surface-900/90 border border-white/10 rounded-2xl p-2 shadow-2xl focus-within:border-brand-500/70 focus-within:ring-2 focus-within:ring-brand-500/20 backdrop-blur-xl transition duration-200">
+            <div class="flex items-end gap-1.5 sm:gap-2">
+
+              <!-- Real Android file picker -->
+<input id="attachmentInput" type="file" accept="image/*,.pdf,.txt,.csv,.json,.md,.js,.py,.html,.css,.xml" onchange="handleAttachmentSelection(this)" hidden>
+<button onclick="document.getElementById('attachmentInput').click()" title="Attach image or document" class="p-2 sm:p-2.5 text-slate-400 hover:text-brand-400 hover:bg-surface-800 rounded-xl transition flex-shrink-0">
+  <i data-lucide="paperclip" class="w-4 sm:w-5 h-4 sm:h-5"></i>
+</button>
+
+              <!-- Textarea Prompt -->
+              <div class="flex-1 min-w-0">
+                <!-- Preview Pill if file uploaded mock -->
+                <div id="attachmentPill" class="hidden items-center gap-1.5 mb-1.5 px-2.5 py-1 bg-surface-800 rounded-lg text-xs text-brand-300 border border-brand-500/30 w-max">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                  <span id="attachedFileName" class="truncate max-w-[180px]">dataset_v2.json</span>
+                  <button onclick="removeAttachment()" class="hover:text-rose-400 ml-1">
+                    <i data-lucide="x" class="w-3 h-3"></i>
+                  </button>
+                </div>
+
+                <textarea
+                  id="chatInput"
+                  rows="1"
+                  placeholder="Ask anything... (Shift+Enter for new line)"
+                  class="w-full bg-transparent text-slate-100 placeholder-slate-500 text-sm sm:text-base resize-none focus:outline-none max-h-40 py-1 px-1"
+                  oninput="handleTextareaResize(this)"
+                  onkeydown="handleKeyDown(event)"
+                ></textarea>
+              </div>
+
+              <!-- Voice Input Button (Web Speech API) -->
+              <button id="micBtn" onclick="toggleVoiceInput()" title="Voice Dictation" class="p-2 sm:p-2.5 text-slate-400 hover:text-brand-400 hover:bg-surface-800 rounded-xl transition flex-shrink-0">
+                <i data-lucide="mic" class="w-4 sm:w-5 h-4 sm:h-5"></i>
+              </button>
+
+              <!-- Send Button -->
+              <button id="sendBtn" onclick="sendMessage()" disabled class="p-2 sm:p-2.5 rounded-xl bg-brand-600 text-white font-medium disabled:opacity-30 disabled:pointer-events-none hover:bg-brand-500 shadow-md shadow-brand-600/30 transition duration-150 active:scale-95 flex-shrink-0">
+                <i data-lucide="arrow-up" class="w-4 sm:w-5 h-4 sm:h-5"></i>
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Subtle bottom info tag -->
+          <div class="flex items-center justify-between text-[11px] text-slate-400 mt-2 px-2">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+              Client-side encrypted
+            </span>
+            <span>233 AI can make mistakes. Verify critical facts.</span>
+          </div>
+
+        </div>
+      </footer>
+
+    </main>
+
+    <!-- OWNER DASHBOARD SCREEN -->
+    <section id="ownerDashboardScreen" class="hidden flex-1 h-full overflow-y-auto bg-surface-950 p-4 sm:p-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-center justify-between gap-3 mb-8">
+          <div>
+            <p class="text-xs text-brand-400 font-semibold uppercase tracking-wider">233 AI Administration</p>
+            <h2 class="text-2xl font-bold text-white mt-1">Owner Dashboard</h2>
+            <p class="text-sm text-slate-400 mt-1">Monitor your platform activity.</p>
+          </div>
+          <button id="ownerDashboardBack" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white hover:bg-white/10">
+            Back to Chat
+          </button>
+        </div>
+
+        <p id="ownerDashboardStatus" class="text-sm text-slate-400 mb-5">Loading dashboard...</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-white/10 bg-surface-900 p-5">
+            <p class="text-sm text-slate-400">Total Users</p>
+            <p id="ownerTotalUsers" class="text-3xl font-bold text-white mt-3">—</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-surface-900 p-5">
+            <p class="text-sm text-slate-400">Free Users</p>
+            <p id="ownerFreeUsers" class="text-3xl font-bold text-white mt-3">—</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-surface-900 p-5">
+            <p class="text-sm text-slate-400">Premium Users</p>
+            <p id="ownerPremiumUsers" class="text-3xl font-bold text-white mt-3">—</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-surface-900 p-5">
+            <p class="text-sm text-slate-400">Active Subscriptions</p>
+            <p id="ownerActiveSubscriptions" class="text-3xl font-bold text-white mt-3">—</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-surface-900 p-5">
+            <p class="text-sm text-slate-400">Monthly Subscription Value</p>
+            <p id="ownerMonthlyValue" class="text-3xl font-bold text-white mt-3">GH₵ —</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-surface-900 p-5">
+            <p class="text-sm text-slate-400">Messages Today</p>
+            <p id="ownerTodayMessages" class="text-3xl font-bold text-white mt-3">—</p>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <button id="manageUsersBtn" class="px-5 py-3 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-400">
+            Manage Users
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OWNER USER MANAGEMENT SCREEN -->
+    <section id="ownerUsersScreen" class="hidden flex-1 h-full overflow-y-auto bg-surface-950 p-4 sm:p-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-center justify-between gap-3 mb-6">
+          <div>
+            <p class="text-xs text-brand-400 font-semibold uppercase tracking-wider">233 AI Administration</p>
+            <h2 class="text-2xl font-bold text-white mt-1">Manage Users</h2>
+          </div>
+          <button id="ownerUsersBack" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white hover:bg-white/10">
+            Back to Dashboard
+          </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 mb-5">
+          <input id="ownerUserSearch" type="search" placeholder="Search by user email..." class="flex-1 rounded-xl bg-surface-900 border border-white/10 px-4 py-3 text-white outline-none focus:border-brand-400">
+          <button id="ownerUserSearchBtn" class="px-5 py-3 rounded-xl bg-brand-500 text-white font-semibold">Search</button>
+        </div>
+
+        <p id="ownerUsersStatus" class="text-sm text-slate-400 mb-4">Users will appear here.</p>
+        <div id="ownerUsersList" class="space-y-3"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-surface-900 border border-white/10 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-slide-up">
+      <div class="flex items-center justify-between p-4 border-b border-white/5">
+        <h3 class="text-base font-semibold text-white flex items-center gap-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-brand-400"></i>
+          Chat & Engine Settings
+        </h3>
+        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-5 text-sm">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Simulated Temperature</label>
+          <div class="flex items-center gap-4">
+            <input type="range" min="0" max="1" step="0.1" value="0.7" id="tempRange" oninput="document.getElementById('tempVal').innerText = this.value" class="w-full accent-brand-500">
+            <span id="tempVal" class="text-brand-400 font-mono text-sm font-bold w-6">0.7</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">Controls creativity: Lower is deterministic, higher is imaginative.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">System Persona Prompt</label>
+          <textarea id="systemPromptInput" rows="2" class="w-full bg-surface-950 border border-white/10 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-brand-500 resize-none" placeholder="You are an omniscient, razor-sharp software architect..."></textarea>
+        </div>
+
+        <div class="pt-2 border-t border-white/5 flex items-center justify-between">
+          <button onclick="wipeAllData()" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-medium">
+            <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+            Clear All History Cache
+          </button>
+          <button onclick="closeSettingsModal()" class="px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-semibold transition">
+            Save Preferences
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform transition-all duration-300 translate-y-[-100px] opacity-0 pointer-events-none flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-850 border border-white/10 shadow-2xl text-xs text-slate-200 font-medium">
+    <i id="toastIcon" data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastMsg">Action completed successfully</span>
+  </div>
+
+  <!-- APPLICATION LOGIC SCRIPT -->
+  <script>
+    // State Variables
+    let chats = [];
+    let currentChatId = null;
+    let isStreaming = false;
+    let streamAbortController = false;
+    let currentModel = 'DeepSeek R1 • Reasoning';
+    let currentModelKey = 'deepseek';
+
+    // Knowledge Bank for simulated intelligent responses
+    const MOCK_KNOWLEDGE = {
+      code: [
+        "Here is the optimized implementation with comprehensive error handling:\n\n```javascript\n// High performance batch dispatcher\nasync function dispatchInParallel(endpoints, batchSize = 4) {\n  const results = [];\n  for (let i = 0; i < endpoints.length; i += batchSize) {\n    const slice = endpoints.slice(i, i + batchSize);\n    const batchPromises = slice.map(async url => {\n      try {\n        const res = await fetch(url);\n        if (!res.ok) throw new Error(`HTTP ${res.status}`);\n        return await res.json();\n      } catch (err) {\n        console.error(`Fetch failure on: ${url}`, err);\n        return { error: true, message: err.message };\n      }\n    });\n    const batchResults = await Promise.all(batchPromises);\n    results.push(...batchResults);\n  }\n  return results;\n}\n```\n\n### Key Improvements Made:\n1. **Concurrency throttling:** Prevents browser thread saturation.\n2. **Safe error bubbling:** Failed endpoints won't kill sibling requests.\n3. **Modern Async/Await ergonomics:** Direct compatibility with ESNext.",
+      ],
+      general: [
+        "That is an insightful question. Let us break down the underlying mechanics into core pillars:\n\n1. **Foundational Architecture**: When system states decouple from UI execution, latency reduces by nearly 40%.\n2. **Heuristic Adaptation**: Neural priors dynamically recalibrate depending on conversational depth and query entropy.\n3. **Empirical Verification**: Testing across multi-agent environments consistently proves lower hallucinations under strict chain-of-thought scaffolds.\n\n> *\"Simplicity is prerequisite for reliability.\"* — Edsger W. Dijkstra\n\nWould you like me to dive deeper into any of these specific areas?",
+      ],
+      thought: "Analyzing semantic context... Evaluating user constraints. Identifying potential edge cases in asynchronous state management. Formulating concise yet comprehensive technical breakdown."
+    };
+
+    // Initialize Application
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      loadChatsFromStorage();
+      setupSpeechRecognition();
+      setupScrollListener();
+
+      // Configure marked
+      marked.setOptions({
+        highlight: function(code, lang) {
+          const language = highlight.getLanguage(lang) ? lang : 'plaintext';
+          return hljs.highlight(code, { language }).value;
+        },
+        breaks: true,
+        gfm: true
+      });
+    });
+
+    // Storage Management
+    function loadChatsFromStorage() {
+      const stored = localStorage.getItem('aether_chats_v1');
+      if (stored) {
+        try {
+          chats = JSON.parse(stored);
+        } catch (e) {
+          chats = [];
+        }
+      }
+
+      if (chats.length === 0) {
+        startNewChat(false);
+      } else {
+        currentChatId = chats[0].id;
+        renderSidebarList();
+        renderActiveChat();
+      }
+    }
+
+    function saveChatsToStorage() {
+      localStorage.setItem('aether_chats_v1', JSON.stringify(chats));
+      renderSidebarList();
+    }
+
+    // Sidebar & Chat Switcher
+    function startNewChat(shouldRender = true) {
+      const newId = 'chat_' + Date.now();
+      const newChat = {
+        id: newId,
+        title: 'New Conversation',
+        model: currentModel,
+        messages: [],
+        createdAt: Date.now()
+      };
+      chats.unshift(newChat);
+      currentChatId = newId;
+      saveChatsToStorage();
+
+      if (shouldRender) {
+        renderSidebarList();
+        renderActiveChat();
+        toggleSidebar(false);
+      }
+      document.getElementById('chatInput').focus();
+    }
+
+    function switchChat(chatId) {
+      if (isStreaming) return;
+      currentChatId = chatId;
+      renderSidebarList();
+      renderActiveChat();
+      toggleSidebar(false);
+    }
+
+    function deleteChat(chatId, event) {
+      event.stopPropagation();
+      chats = chats.filter(c => c.id !== chatId);
+      if (chats.length === 0) {
+        startNewChat(false);
+      } else if (currentChatId === chatId) {
+        currentChatId = chats[0].id;
+      }
+      saveChatsToStorage();
+      renderSidebarList();
+      renderActiveChat();
+      showToast("Chat deleted", "trash-2");
+    }
+
+    function renderSidebarList() {
+      const container = document.getElementById('chatListContainer');
+      container.innerHTML = '';
+
+      if (chats.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-xs text-slate-500">No chats yet.</div>`;
+        return;
+      }
+
+      chats.forEach(chat => {
+        const isActive = chat.id === currentChatId;
+        const div = document.createElement('div');
+        div.className = `group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer text-xs font-medium transition-all ${
+          isActive
+            ? 'bg-brand-600/15 text-brand-300 border border-brand-500/30'
+            : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+        }`;
+        div.onclick = () => switchChat(chat.id);
+
+        div.innerHTML = `
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <i data-lucide="${isActive ? 'message-square-code' : 'message-square'}" class="w-4 h-4 flex-shrink-0 ${isActive ? 'text-brand-400' : 'text-slate-500 group-hover:text-slate-400'}"></i>
+            <span class="truncate max-w-[170px]">${chat.title || 'Untitled Session'}</span>
+          </div>
+          <button onclick="deleteChat('${chat.id}', event)" class="opacity-0 group-hover:opacity-100 hover:text-rose-400 p-1 rounded transition" title="Delete">
+            <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+        container.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    // Toggle Sidebar on mobile
+    function toggleSidebar(open) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('mobileBackdrop');
+      if (open) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    // Model Selector Logic
+    function toggleModelDropdown() {
+      const menu = document.getElementById('modelDropdown');
+      menu.classList.toggle('hidden');
+    }
+
+    function selectModel(name, dotColorClass, key) {
+      currentModel = name;
+      currentModelKey = key;
+      document.getElementById('currentModelName').innerText = name;
+      const dot = document.getElementById('currentModelDot');
+      dot.className = `w-2 h-2 rounded-full ${dotColorClass}`;
+      toggleModelDropdown();
+      showToast(`Model switched to ${name}`, "sparkles");
+
+      // Update current chat model if empty
+      const chat = getCurrentChat();
+      if (chat && chat.messages.length === 0) {
+        chat.model = name;
+        saveChatsToStorage();
+      }
+    }
+
+    // Close model dropdown if clicked outside
+    window.addEventListener('click', (e) => {
+      const btn = document.getElementById('modelSelectorBtn');
+      const dropdown = document.getElementById('modelDropdown');
+      if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Chat Messages Rendering
+    function getCurrentChat() {
+      return chats.find(c => c.id === currentChatId);
+    }
+
+    function renderActiveChat() {
+      const chat = getCurrentChat();
+      const emptyState = document.getElementById('emptyState');
+      const messagesList = document.getElementById('messagesList');
+      const chatScrollArea = document.getElementById('chatScrollArea');
+
+      if (!chat || chat.messages.length === 0) {
+        emptyState.classList.remove('hidden');
+        messagesList.classList.add('hidden');
+        messagesList.innerHTML = '';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      messagesList.classList.remove('hidden');
+      messagesList.innerHTML = '';
+
+      chat.messages.forEach(msg => {
+        appendMessageToDOM(msg, false);
+      });
+
+      scrollToBottom(false);
+    }
+
+    function appendMessageToDOM(msg, animate = true) {
+      const messagesList = document.getElementById('messagesList');
+      const isUser = msg.role === 'user';
+
+      const msgDiv = document.createElement('div');
+      msgDiv.id = msg.id || 'msg_' + Date.now();
+      msgDiv.className = `flex gap-3 sm:gap-4 ${animate ? 'animate-slide-up' : ''} ${isUser ? 'justify-end' : 'justify-start'}`;
+
+      if (isUser) {
+        msgDiv.innerHTML = `
+          <div class="max-w-[85%] sm:max-w-[75%] flex flex-col items-end">
+            <div class="bg-brand-600 text-white px-4 py-3 rounded-2xl rounded-tr-sm shadow-md text-sm leading-relaxed whitespace-pre-wrap selection:bg-brand-800">
+              ${escapeHtml(msg.content)}
+            </div>
+            <span class="text-[10px] text-slate-400 mt-1 mr-1">${formatTime(msg.timestamp)}</span>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex-shrink-0 flex items-center justify-center text-xs font-bold text-white shadow">
+            U
+          </div>
+        `;
+      } else {
+        // AI Assistant Message with Reasoner Support
+        let thoughtHTML = '';
+        if (msg.thought) {
+          thoughtHTML = `
+            <div class="mb-3 rounded-xl bg-surface-900/90 border border-white/5 p-3 text-xs text-slate-400">
+              <details class="group cursor-pointer">
+                <summary class="flex items-center gap-1.5 font-mono text-[11px] text-cyan-400/90 select-none list-none">
+                  <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                  <span>Reasoning Process (${msg.thoughtTime || '1.2s'})</span>
+                  <i data-lucide="chevron-down" class="w-3 h-3 group-open:rotate-180 transition-transform ml-auto"></i>
+                </summary>
+                <div class="mt-2.5 pt-2 border-t border-white/5 font-mono text-[11px] leading-relaxed text-slate-400/80">
+                  ${escapeHtml(msg.thought)}
+                </div>
+              </details>
+            </div>
+          `;
+        }
+
+        const parsedContent = marked.parse(msg.content || '');
+
+        msgDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-xl bg-surface-850 border border-brand-500/30 flex-shrink-0 flex items-center justify-center shadow-lg text-brand-400 mt-0.5">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+          </div>
+          <div class="max-w-[88%] sm:max-w-[85%] flex-1 overflow-hidden">
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-xs font-semibold text-slate-300">${msg.modelUsed || '233 AI'}</span>
+              <span class="text-[10px] text-slate-400">${formatTime(msg.timestamp)}</span>
+            </div>
+
+            ${thoughtHTML}
+
+            <div class="prose-chat text-sm text-slate-200 leading-relaxed overflow-x-auto selection:bg-brand-900/60" id="content_${msg.id}">
+              ${parsedContent}
+            </div>
+
+            <!-- Message Action Toolbar -->
+            <div class="flex items-center gap-2 mt-2 pt-1 text-slate-400 text-xs">
+              <button onclick="copyMessageText('${msg.id}')" title="Copy response" class="hover:text-slate-200 p-1 rounded hover:bg-white/5 transition flex items-center gap-1">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span class="text-[10px]">Copy</span>
+              </button>
+              <button onclick="speakMessage('${msg.id}')" title="Read aloud" class="hover:text-slate-200 p-1 rounded hover:bg-white/5 transition flex items-center gap-1">
+                <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                <span class="text-[10px]">Listen</span>
+              </button>
+              <button onclick="regenerateLast()" title="Regenerate" class="hover:text-slate-200 p-1 rounded hover:bg-white/5 transition flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                <span class="text-[10px]">Retry</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      messagesList.appendChild(msgDiv);
+      lucide.createIcons();
+    }
+
+    // Handle Input & Submission
+    function handleKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function handleTextareaResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+
+      const sendBtn = document.getElementById('sendBtn');
+      if (el.value.trim().length > 0 || selectedAttachment) {
+        sendBtn.removeAttribute('disabled');
+      } else {
+        sendBtn.setAttribute('disabled', 'true');
+      }
+    }
+
+    function usePrompt(text) {
+      const input = document.getElementById('chatInput');
+      input.value = text;
+      handleTextareaResize(input);
+      sendMessage();
+    }
+
+    // Core Message Sending with Simulated AI Streaming
+
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      const attachmentToSend = selectedAttachment;
+
+      if ((!text && !attachmentToSend) || isStreaming) return;
+
+      const messageText = text || 'Please analyze the attached file.';
+      const chat = getCurrentChat();
+      if (!chat) return;
+
+      if (chat.messages.length === 0) {
+        chat.title = messageText.slice(0, 32) + (messageText.length > 32 ? '...' : '');
+      }
+
+      const userMsg = {
+        id: 'msg_u_' + Date.now(),
+        role: 'user',
+        content: messageText,
+        timestamp: Date.now()
+      };
+
+      chat.messages.push(userMsg);
+
+      input.value = '';
+      handleTextareaResize(input);
+      removeAttachment();
+
+      document.getElementById('emptyState').classList.add('hidden');
+      document.getElementById('messagesList').classList.remove('hidden');
+      appendMessageToDOM(userMsg, true);
+      scrollToBottom(true);
+      saveChatsToStorage();
+
+      await triggerAIResponse(messageText, attachmentToSend);
+    }
+
+    async function triggerAIResponse(query, attachment = null) {
+      isStreaming = true;
+      streamAbortController = false;
+
+      document.getElementById('stopStreamingContainer').classList.remove('hidden');
+      document.getElementById('stopStreamingContainer').classList.add('flex');
+
+      const chat = getCurrentChat();
+      const aiMsgId = 'msg_a_' + Date.now();
+
+      const newAIMessage = {
+        id: aiMsgId,
+        role: 'assistant',
+        modelUsed: currentModel,
+        content: '',
+        thought: null,
+        thoughtTime: null,
+        timestamp: Date.now()
+      };
+
+      chat.messages.push(newAIMessage);
+      appendMessageToDOM(newAIMessage, true);
+
+      const contentContainer = document.getElementById('content_' + aiMsgId);
+
+      if (contentContainer) {
+        contentContainer.classList.add('typing-cursor');
+      }
+
+      try {
+        const accessToken = await window.getSupabaseAccessToken();
+
+        if (!accessToken) {
+          throw new Error('Please log in to use 233 AI.');
+        }
+
+const attachmentPayload = attachment ? await (async () => {
+            const extension = attachment.name.split('.').pop().toLowerCase();
+            const mimeTypes = {
+              pdf: 'application/pdf', txt: 'text/plain', csv: 'text/csv',
+              json: 'application/json', md: 'text/markdown',
+              js: 'text/javascript', py: 'text/x-python',
+              html: 'text/html', css: 'text/css', xml: 'application/xml',
+              jpg: 'image/jpeg', jpeg: 'image/jpeg',
+              png: 'image/png', webp: 'image/webp', gif: 'image/gif'
+            };
+
+            const mimeType = mimeTypes[extension] || attachment.type;
+            if (!mimeType) throw new Error('Unsupported attachment type.');
+
+            if (mimeType.startsWith('image/') || mimeType === 'application/pdf') {
+              const bytes = new Uint8Array(await attachment.arrayBuffer());
+              let binary = '';
+              const chunkSize = 8192;
+              for (let i = 0; i < bytes.length; i += chunkSize) {
+                binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+              }
+              return {
+                name: attachment.name,
+                mimeType,
+                data: btoa(binary),
+                kind: 'binary'
+              };
+            }
+
+            return {
+              name: attachment.name,
+              mimeType,
+              text: await attachment.text(),
+              kind: 'text'
+            };
+          })() : null;
+
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify({
+              message: query,
+              history: chat.messages
+                .filter(msg => msg.content && (msg.role === "user" || msg.role === "assistant"))
+                .filter(msg => msg.id !== aiMsgId)
+                .map(msg => ({
+                  role: msg.role === "assistant" ? "model" : "user",
+                  parts: [{ text: msg.content }]
+                })),
+              attachment: attachmentPayload
+            })
+          });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorMessage = 'Gemini request failed';
+          try {
+            errorMessage = JSON.parse(errorText).error || errorMessage;
+          } catch {}
+          throw new Error(errorMessage);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let currentText = '';
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          if (streamAbortController) {
+            await reader.cancel();
+            break;
+          }
+
+          currentText += decoder.decode(value, { stream: true });
+          newAIMessage.content = currentText;
+
+          if (contentContainer) {
+            contentContainer.innerHTML = marked.parse(currentText);
+          }
+
+          scrollToBottom(false);
+        }
+
+        currentText += decoder.decode();
+        newAIMessage.content = currentText;
+
+        if (!currentText && !streamAbortController) {
+          throw new Error('Gemini returned an empty response');
+        }
+
+        if (streamAbortController) {
+          newAIMessage.content = currentText;
+        }
+
+        if (contentContainer) {
+          contentContainer.classList.remove('typing-cursor');
+          contentContainer.querySelectorAll('pre code').forEach(el => {
+            hljs.highlightElement(el);
+          });
+        }
+
+      } catch (error) {
+        console.error('Gemini error:', error);
+        newAIMessage.content = 'Sorry, I could not get an AI response. ' + error.message;
+
+        if (contentContainer) {
+          contentContainer.innerHTML = marked.parse(newAIMessage.content);
+          contentContainer.classList.remove('typing-cursor');
+        }
+      } finally {
+        isStreaming = false;
+        document.getElementById('stopStreamingContainer').classList.add('hidden');
+        document.getElementById('stopStreamingContainer').classList.remove('flex');
+        saveChatsToStorage();
+        scrollToBottom(true);
+      }
+    }
+
+    function stopGeneration() {
+      if (isStreaming) {
+        streamAbortController = true;
+        showToast("Generation halted", "square");
+      }
+    }
+
+    function regenerateLast() {
+      const chat = getCurrentChat();
+      if (!chat || chat.messages.length < 2 || isStreaming) return;
+
+      // Pop last assistant message
+      if (chat.messages[chat.messages.length - 1].role === 'assistant') {
+        chat.messages.pop();
+        const lastUser = chat.messages[chat.messages.length - 1];
+        renderActiveChat();
+        triggerAIResponse(lastUser.content);
+      }
+    }
+
+    // Scroll Utilities
+    function scrollToBottom(force = true) {
+      const scrollArea = document.getElementById('chatScrollArea');
+      if (force) {
+        scrollArea.scrollTop = scrollArea.scrollHeight;
+      } else {
+        const threshold = 180;
+        const isNearBottom = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight <= threshold;
+        if (isNearBottom) {
+          scrollArea.scrollTop = scrollArea.scrollHeight;
+        }
+      }
+    }
+
+    function setupScrollListener() {
+      const scrollArea = document.getElementById('chatScrollArea');
+      const scrollBtn = document.getElementById('scrollToBottomBtn');
+      scrollArea.addEventListener('scroll', () => {
+        const distFromBottom = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight;
+        if (distFromBottom > 240) {
+          scrollBtn.classList.remove('hidden');
+        } else {
+          scrollBtn.classList.add('hidden');
+        }
+      });
+    }
+
+    // Message Utilities (Copy, Speech)
+    function copyMessageText(msgId) {
+      const chat = getCurrentChat();
+      const msg = chat.messages.find(m => m.id === msgId);
+      if (msg && msg.content) {
+        navigator.clipboard.writeText(msg.content).then(() => {
+          showToast("Copied to clipboard!", "clipboard-check");
+        });
+      }
+    }
+
+    function speakMessage(msgId) {
+      if (!('speechSynthesis' in window)) {
+        showToast("Speech synthesis not supported in browser", "alert-circle");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const chat = getCurrentChat();
+      const msg = chat.messages.find(m => m.id === msgId);
+      if (msg && msg.content) {
+        // Strip markdown formatting for cleaner speech
+        const plainText = msg.content.replace(/[#*`_~\[\]]/g, '');
+        const utter = new SpeechSynthesisUtterance(plainText);
+        utter.rate = 1.05;
+        utter.pitch = 1.0;
+        window.speechSynthesis.speak(utter);
+        showToast("Playing vocal transcription...", "volume-2");
+      }
+    }
+
+    // Voice Input via Web Speech API
+    let recognition = null;
+    let isListening = false;
+    function setupSpeechRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRec();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          isListening = true;
+          document.getElementById('micBtn').classList.add('text-rose-400', 'animate-pulse');
+          showToast("Listening... speak now", "mic");
+        };
+
+        recognition.onresult = (e) => {
+          const transcript = e.results[0][0].transcript;
+          const input = document.getElementById('chatInput');
+          input.value += (input.value ? ' ' : '') + transcript;
+          handleTextareaResize(input);
+        };
+
+        recognition.onerror = () => {
+          isListening = false;
+          document.getElementById('micBtn').classList.remove('text-rose-400', 'animate-pulse');
+        };
+
+        recognition.onend = () => {
+          isListening = false;
+          document.getElementById('micBtn').classList.remove('text-rose-400', 'animate-pulse');
+        };
+      }
+    }
+
+    function toggleVoiceInput() {
+      if (!recognition) {
+        showToast("Speech recognition not supported in browser", "mic-off");
+        return;
+      }
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    }
+
+    // Real file attachments
+    let selectedAttachment = null;
+
+    const attachmentMimeTypes = {
+      pdf: 'application/pdf',
+      txt: 'text/plain',
+      csv: 'text/csv',
+      json: 'application/json',
+      md: 'text/markdown',
+      js: 'text/javascript',
+      py: 'text/x-python',
+      html: 'text/html',
+      css: 'text/css',
+      xml: 'application/xml',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png',
+      webp: 'image/webp',
+      gif: 'image/gif'
+    };
+
+    function handleAttachmentSelection(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      if (file.size > 10 * 1024 * 1024) {
+        showToast('File is too large. Maximum size is 10 MB.', 'alert-circle');
+        input.value = '';
+        return;
+      }
+
+      const extension = file.name.split('.').pop().toLowerCase();
+      const mime = attachmentMimeTypes[extension];
+
+      if (!mime) {
+        showToast('This file type is not supported yet.', 'alert-circle');
+        input.value = '';
+        return;
+      }
+
+      selectedAttachment = file;
+
+      document.getElementById('attachedFileName').innerText = file.name;
+      const pill = document.getElementById('attachmentPill');
+      pill.classList.remove('hidden');
+      pill.classList.add('flex');
+
+      handleTextareaResize(document.getElementById('chatInput'));
+      showToast('File attached: ' + file.name, 'paperclip');
+    }
+
+    function removeAttachment() {
+      selectedAttachment = null;
+
+      const input = document.getElementById('attachmentInput');
+      if (input) input.value = '';
+
+      const pill = document.getElementById('attachmentPill');
+      pill.classList.add('hidden');
+      pill.classList.remove('flex');
+
+      const chatInput = document.getElementById('chatInput');
+      if (chatInput) handleTextareaResize(chatInput);
+    }
+
+    // Export & Clear
+    function exportChatHistory() {
+      const chat = getCurrentChat();
+      if (!chat || chat.messages.length === 0) {
+        showToast("Nothing to export yet", "alert-circle");
+        return;
+      }
+      let markdown = `# ${chat.title}\n*Model: ${chat.model} | Date: ${new Date(chat.createdAt).toLocaleString()}*\n\n---\n\n`;
+      chat.messages.forEach(m => {
+        markdown += `### ${m.role === 'user' ? 'User' : 'Assistant'}\n${m.content}\n\n`;
+      });
+
+      const blob = new Blob([markdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${chat.title.toLowerCase().replace(/[^a-z0-9]/g, '_')}_transcript.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Transcript exported to markdown", "download");
+    }
+
+    function clearCurrentChat() {
+      const chat = getCurrentChat();
+      if (!chat) return;
+      if (confirm("Clear all messages in this conversation?")) {
+        chat.messages = [];
+        saveChatsToStorage();
+        renderActiveChat();
+        showToast("Chat cleared", "trash");
+      }
+    }
+
+    // Settings Modal
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('hidden');
+    }
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+      showToast("Preferences updated", "check");
+    }
+    function wipeAllData() {
+      if (confirm("Are you sure you want to erase ALL conversations permanently?")) {
+        localStorage.removeItem('aether_chats_v1');
+        chats = [];
+        startNewChat(true);
+        closeSettingsModal();
+        showToast("All historical chats erased", "trash-2");
+      }
+    }
+
+    // Toast Utility
+    let toastTimeout;
+    function showToast(message, iconName = "check-circle") {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.innerText = message;
+      toastIcon.setAttribute('data-lucide', iconName);
+      lucide.createIcons();
+
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-[-100px]', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2500);
+    }
+
+    // Helper functions
+    function formatTime(timestamp) {
+      if (!timestamp) return '';
+      return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const supabaseClient = createClient(
+  'https://alblrlzqpdrfjpqmdkao.supabase.co',
+  'sb_publishable_Z_y-TaNX8rqBxagpTB2hHw_H9nnoJ1C'
+);
+
+window.getSupabaseAccessToken = async () => {
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) throw error;
+  return data.session?.access_token || null;
+};
+
+let authMode = 'login';
+
+const authScreen = document.getElementById('authScreen');
+const appShell = document.getElementById('appShell');
+const authForm = document.getElementById('authForm');
+const authTitle = document.getElementById('authTitle');
+const authSubmit = document.getElementById('authSubmit');
+const authSwitch = document.getElementById('authSwitch');
+const authSwitchText = document.getElementById('authSwitchText');
+const authError = document.getElementById('authError');
+
+const ownerDashboardBtn = document.getElementById('ownerDashboardBtn');
+const ownerDashboardScreen = document.getElementById('ownerDashboardScreen');
+const ownerDashboardBack = document.getElementById('ownerDashboardBack');
+const ownerDashboardChat = document.querySelector('#appShell > main');
+const ownerDashboardStatus = document.getElementById('ownerDashboardStatus');
+
+async function loadOwnerDashboard() {
+  ownerDashboardStatus.textContent = 'Loading dashboard statistics...';
+
+  try {
+    const token = await window.getSupabaseAccessToken();
+
+    if (!token) throw new Error('Please sign in again.');
+
+    const response = await fetch('/api/owner/dashboard', {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Unable to load dashboard.');
+    }
+
+    document.getElementById('ownerTotalUsers').textContent =
+      Number(data.total_users || 0).toLocaleString();
+
+    document.getElementById('ownerFreeUsers').textContent =
+      Number(data.free_users || 0).toLocaleString();
+
+    document.getElementById('ownerPremiumUsers').textContent =
+      Number(data.premium_users || 0).toLocaleString();
+
+    document.getElementById('ownerActiveSubscriptions').textContent =
+      Number(data.active_subscriptions || 0).toLocaleString();
+
+    document.getElementById('ownerMonthlyValue').textContent =
+      'GH₵ ' + Number(data.monthly_value || 0).toLocaleString();
+
+    document.getElementById('ownerTodayMessages').textContent =
+      Number(data.today_messages || 0).toLocaleString();
+
+    ownerDashboardStatus.textContent = 'Dashboard updated successfully.';
+  } catch (error) {
+    ownerDashboardStatus.textContent = error.message;
+  }
+}
+
+ownerDashboardBtn.addEventListener('click', async () => {
+  ownerDashboardChat.classList.add('hidden');
+  ownerDashboardScreen.classList.remove('hidden');
+  await loadOwnerDashboard();
+});
+
+ownerDashboardBack.addEventListener('click', () => {
+  ownerDashboardScreen.classList.add('hidden');
+  ownerDashboardChat.classList.remove('hidden');
+});
+
+
+
+const manageUsersBtn = document.getElementById('manageUsersBtn');
+const ownerUsersScreen = document.getElementById('ownerUsersScreen');
+const ownerUsersBack = document.getElementById('ownerUsersBack');
+const ownerUserSearch = document.getElementById('ownerUserSearch');
+const ownerUserSearchBtn = document.getElementById('ownerUserSearchBtn');
+const ownerUsersStatus = document.getElementById('ownerUsersStatus');
+const ownerUsersList = document.getElementById('ownerUsersList');
+
+async function loadOwnerUsers() {
+  ownerUsersStatus.textContent = 'Loading users...';
+  ownerUsersList.replaceChildren();
+
+  try {
+    const token = await window.getSupabaseAccessToken();
+    if (!token) throw new Error('Please sign in again.');
+
+    const search = ownerUserSearch.value.trim();
+    const params = new URLSearchParams({ limit: '50', offset: '0' });
+
+    if (search) params.set('search', search);
+
+    const response = await fetch('/api/owner/users?' + params.toString(), {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Unable to load users.');
+    }
+
+    const users = Array.isArray(data.users) ? data.users : [];
+
+    ownerUsersStatus.textContent =
+      'Showing ' + users.length + ' of ' +
+      Number(data.total_users || 0).toLocaleString() + ' users.';
+
+    if (users.length === 0) {
+      ownerUsersStatus.textContent = 'No users found.';
+      return;
+    }
+
+    users.forEach(user => {
+      const card = document.createElement('div');
+      card.className = 'rounded-2xl border border-white/10 bg-surface-900 p-4';
+
+      const email = document.createElement('p');
+      email.className = 'font-semibold text-white break-all';
+      email.textContent = user.email || 'No email';
+
+      const details = document.createElement('p');
+      details.className = 'text-sm text-slate-400 mt-2';
+      details.textContent =
+        'Plan: ' + (user.plan_name || user.plan_id || 'Free') +
+        ' · Status: ' + (user.subscription_status || 'none');
+
+      const created = document.createElement('p');
+      created.className = 'text-xs text-slate-500 mt-2';
+      created.textContent = 'Joined: ' +
+        (user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown');
+
+      const expiry = document.createElement('p');
+      expiry.className = 'text-xs text-slate-500 mt-1';
+      expiry.textContent = 'Expires: ' +
+        (user.expires_at ? new Date(user.expires_at).toLocaleDateString() : 'No expiry');
+
+      card.append(email, details, created, expiry);
+      ownerUsersList.appendChild(card);
+    });
+
+  } catch (error) {
+    ownerUsersStatus.textContent = error.message;
+  }
+}
+
+manageUsersBtn.addEventListener('click', async () => {
+  ownerDashboardScreen.classList.add('hidden');
+  ownerUsersScreen.classList.remove('hidden');
+  await loadOwnerUsers();
+});
+
+ownerUsersBack.addEventListener('click', () => {
+  ownerUsersScreen.classList.add('hidden');
+  ownerDashboardScreen.classList.remove('hidden');
+});
+
+ownerUserSearchBtn.addEventListener('click', loadOwnerUsers);
+
+ownerUserSearch.addEventListener('keydown', event => {
+  if (event.key === 'Enter') loadOwnerUsers();
+});
+
+function updateAuthMode() {
+  const signup = authMode === 'signup';
+  authTitle.textContent = signup ? 'Create your account' : 'Welcome back';
+  authSubmit.textContent = signup ? 'Create account' : 'Login';
+  authSwitchText.textContent = signup ? 'Already have an account?' : "Don't have an account?";
+  authSwitch.textContent = signup ? 'Login' : 'Sign up';
+  authError.textContent = '';
+}
+
+authSwitch.addEventListener('click', () => {
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  updateAuthMode();
+});
+
+authForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  authSubmit.disabled = true;
+  authSubmit.textContent = 'Please wait...';
+  authError.textContent = '';
+
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+
+  try {
+    let result;
+
+    if (authMode === 'signup') {
+      result = await supabaseClient.auth.signUp({ email, password });
+    } else {
+      result = await supabaseClient.auth.signInWithPassword({ email, password });
+    }
+
+    if (result.error) throw result.error;
+
+    if (authMode === 'signup' && !result.data.session) {
+      authError.textContent = 'Account created. Check your email to confirm, then log in.';
+    }
+  } catch (error) {
+    authError.textContent = error.message || 'Authentication failed.';
+  } finally {
+    authSubmit.disabled = false;
+    authSubmit.textContent = authMode === 'signup' ? 'Create account' : 'Login';
+  }
+});
+
+async function showSession(session) {
+  const loggedIn = !!session;
+  authScreen.classList.toggle('hidden', loggedIn);
+  appShell.classList.toggle('hidden', !loggedIn);
+
+  if (loggedIn) {
+    document.getElementById('signedInEmail').textContent =
+      session.user.email || '233 AI User';
+    if (window.lucide) lucide.createIcons();
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) alert(error.message);
+});
+
+const { data: { session } } = await supabaseClient.auth.getSession();
+await showSession(session);
+
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  showSession(session);
+});
+
+if (window.lucide) lucide.createIcons();
+</script>
+
+</body>
+</html>
