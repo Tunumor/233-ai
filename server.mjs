@@ -278,6 +278,149 @@ app.post('/api/chat', requireAuth, async (req, res) => {
 });
 
 
+
+// Generate a structured website or web app project
+app.post('/api/build', requireAuth, async (req, res) => {
+  const prompt = req.body?.prompt;
+
+  if (typeof prompt !== 'string' || !prompt.trim()) {
+    return res.status(400).json({ error: 'Describe the project you want to build.' });
+  }
+
+  if (prompt.length > 5000) {
+    return res.status(400).json({ error: 'Project description is too long. Maximum is 5,000 characters.' });
+  }
+
+  try {
+    // Build requests use the same daily allowance as chat
+    const { data, error } = await req.userSupabase.rpc('consume_chat_message');
+
+    if (error) {
+      console.error('Build usage check error:', error.message);
+      return res.status(503).json({ error: 'Unable to check your daily limit.' });
+    }
+
+    const usage = Array.isArray(data) ? data[0] : data;
+
+    if (!usage) {
+      return res.status(503).json({ error: 'Usage information unavailable.' });
+    }
+
+    if (!usage.allowed) {
+      return res.status(429).json({
+        error: `Daily limit reached. Your ${usage.plan_id} plan allows ${usage.daily_limit} requests per day.`,
+        plan: usage.plan_id,
+        dailyLimit: usage.daily_limit,
+        used: usage.message_count,
+        remaining: usage.remaining
+      });
+    }
+
+    res.setHeader('X-233AI-Plan', usage.plan_id);
+    res.setHeader('X-233AI-Daily-Limit', String(usage.daily_limit));
+    res.setHeader('X-233AI-Remaining', String(usage.remaining));
+
+    const buildInstructions = `
+You are the project-building engine for 233 AI.
+Create a complete, working website or browser-based web application from this request:
+
+${prompt.trim()}
+
+Return ONLY valid JSON with this exact structure:
+{
+  "name": "Short project name",
+  "description": "Brief project description",
+  "files": [
+    { "path": "index.html", "content": "complete HTML source" },
+    { "path": "style.css", "content": "complete CSS source" },
+    { "path": "script.js", "content": "complete JavaScript source" }
+  ]
+}
+
+Rules:
+- Generate separate index.html, style.css and script.js files.
+- Include all three files, even if one has minimal content.
+- Link style.css and script.js correctly from index.html.
+- Make the project functional, responsive and mobile-friendly.
+- Use accessible labels and sensible error handling.
+- Do not use server-side code, secrets, API keys or real payment processing.
+- Do not claim that login, payments or cloud storage work unless implemented with a real secure backend.
+- Do not include external scripts or remote dependencies.
+- Keep all code inside the three requested files.
+- Do not use Markdown fences or explanations outside the JSON.
+`;
+
+    const result = await ai.models.generateContent({
+      model: 'gemini-3.5-flash-lite',
+      contents: [{ role: 'user', parts: [{ text: buildInstructions }] }]
+    });
+
+    let output = result.text;
+
+    if (typeof output !== 'string' || !output.trim()) {
+      throw new Error('The AI returned an empty project.');
+    }
+
+    output = output.trim()
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '');
+
+    const project = JSON.parse(output);
+    const allowedFiles = new Set(['index.html', 'style.css', 'script.js']);
+
+    if (!project || !Array.isArray(project.files)) {
+      throw new Error('Invalid project structure returned by AI.');
+    }
+
+    const files = [];
+    let totalSize = 0;
+
+    for (const file of project.files) {
+      if (
+        !file ||
+        typeof file.path !== 'string' ||
+        !allowedFiles.has(file.path) ||
+        typeof file.content !== 'string'
+      ) {
+        throw new Error('The AI returned an unsupported project file.');
+      }
+
+      totalSize += Buffer.byteLength(file.content, 'utf8');
+
+      if (totalSize > 50000) {
+        throw new Error('Generated project is too large. Please try a simpler request.');
+      }
+
+      if (files.some(item => item.path === file.path)) {
+        throw new Error('Duplicate project file returned.');
+      }
+
+      files.push({ path: file.path, content: file.content });
+    }
+
+    if (!files.some(file => file.path === 'index.html')) {
+      throw new Error('The project is missing its main HTML file.');
+    }
+
+    return res.json({
+      success: true,
+      project: {
+        name: typeof project.name === 'string' ? project.name.slice(0, 80) : 'My 233 AI Project',
+        description: typeof project.description === 'string' ? project.description.slice(0, 300) : '',
+        files
+      },
+      usage: {
+        plan: usage.plan_id,
+        remaining: usage.remaining
+      }
+    });
+
+  } catch (error) {
+    console.error('Build error:', error.message);
+    return res.status(500).json({ error: 'Project generation failed. Please try again.' });
+  }
+});
+
 // Start Premium payment through Paystack
 app.post('/api/payments/initialize', requireAuth, async (req, res) => {
   try {
