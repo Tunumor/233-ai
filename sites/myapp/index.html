@@ -1663,12 +1663,29 @@ async function generateBuildProject() {
       throw new Error(data.error || 'Project generation failed.');
     }
 
-    if (!data.project || !data.project.files ||
-        typeof data.project.files['index.html'] !== 'string') {
+    if (!data.project || !data.project.files) {
       throw new Error('The AI returned an invalid project. Please try again.');
     }
 
-    buildProject = data.project;
+    const normalizedFiles = Array.isArray(data.project.files)
+      ? Object.fromEntries(
+          data.project.files.map(file => [file.path, file.content])
+        )
+      : data.project.files;
+
+    if (
+      !normalizedFiles ||
+      typeof normalizedFiles['index.html'] !== 'string' ||
+      typeof normalizedFiles['style.css'] !== 'string' ||
+      typeof normalizedFiles['script.js'] !== 'string'
+    ) {
+      throw new Error('The AI returned incomplete project files. Please try again.');
+    }
+
+    buildProject = {
+      ...data.project,
+      files: normalizedFiles
+    };
     activeBuildFile = 'index.html';
 
     buildProjectName.textContent = buildProject.name || 'Your Project';
